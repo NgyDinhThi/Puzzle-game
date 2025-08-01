@@ -131,6 +131,8 @@ public class Grid : MonoBehaviour
                 gridSquares[squareIndexs].GetComponent<GridSquare>().PlaceShapeOnBoard();
             }
 
+            currentSelectedShape.DeactivateAfterPlacement(); 
+
             var shapeLeft = 0;
             foreach (var shape in shapeStorage.shapeList)
             {
@@ -139,8 +141,8 @@ public class Grid : MonoBehaviour
                     shapeLeft++;
                 }
             }
-            
-            if (shapeLeft ==0)
+
+            if (shapeLeft == 0)
             {
                 GameEvents.RequestNewShape();
             }
@@ -156,3 +158,4 @@ public class Grid : MonoBehaviour
     }    
 
 }
+ 
