@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -19,6 +19,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     private Canvas canvas;
     private Vector3 _startPosition;
     private bool _shapeActive = true;
+    private bool isPlaced = false;
 
     private void Awake()
     {
@@ -32,11 +33,13 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     private void OnEnable()
     {
         GameEvents.MoveShapeToStartPosition += MoveShapeToStartPosition;
+        GameEvents.SetShapeInactive += SetShapeInactive;
     }
 
     private void OnDisable()
     {
         GameEvents.MoveShapeToStartPosition -= MoveShapeToStartPosition;
+        GameEvents.SetShapeInactive -= SetShapeInactive;
     }
 
     public bool IsOnStartPosition()
@@ -73,6 +76,12 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
             square.SetActive(false);
         }
         _shapeActive = false;
+        isPlaced = true;
+    }
+
+    public bool IsPlaced()
+    {
+        return isPlaced;
     }
 
     public void ActivateShape()
@@ -90,6 +99,7 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     public void RequestNewshape(Shapedata shapeData)
     {
         _transform.localPosition = _startPosition;
+        isPlaced = false;
         CreateShape(shapeData);
     }
 
@@ -191,5 +201,30 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     private void MoveShapeToStartPosition()
     {
         _transform.localPosition = _startPosition;
+    }
+    private void SetShapeInactive()
+    {
+        if (isPlaced) return; // ✅ nếu đã được đặt rồi thì đừng đụng vào
+
+        if (!IsOnStartPosition() && IsAnyOfShapeSquaresActive())
+        {
+            bool shapePlaced = false;
+            foreach (var square in _currentShape)
+            {
+                if (square.GetComponent<ShapeSquare>().occupiedImage.gameObject.activeSelf)
+                {
+                    shapePlaced = true;
+                    break;
+                }
+            }
+
+            if (shapePlaced)
+            {
+                foreach (var square in _currentShape)
+                {
+                    square.SetActive(false);
+                }
+            }
+        }
     }
 }
