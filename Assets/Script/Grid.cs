@@ -93,4 +93,26 @@ public class Grid : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        GameEvents.CheckIfShapeCanbePlaced += CheckIfShapeCanbePlaced;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.CheckIfShapeCanbePlaced -= CheckIfShapeCanbePlaced;
+    }
+
+    private void CheckIfShapeCanbePlaced()
+    {
+        foreach (var square in gridSquares)
+        {
+            var gridSquare = square.GetComponent<GridSquare>();
+            if (gridSquare.CanUseSquare() == true)
+            {
+                gridSquare.ActivateSquare();
+            }
+        }
+    }    
+
 }
