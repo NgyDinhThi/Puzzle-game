@@ -14,10 +14,14 @@ public class Grid : MonoBehaviour
     public float everySquareOffset = 0.0f;
 
     private Vector2 offset = new Vector2(0.0f, 0.0f);
-    public List<GameObject> gridSquares = new List<GameObject>();
+    public System.Collections.Generic.List<GameObject> gridSquares = new System.Collections.Generic.List<GameObject>();
+
+    private LineIndicator lineIndicator;
+
 
     private void Start()
     {
+        lineIndicator = GetComponent<LineIndicator>();
         CreateGrid();
     }
 
@@ -42,7 +46,7 @@ public class Grid : MonoBehaviour
                 gridSquares[gridSquares.Count -1].transform.SetParent(this.transform);
                 gridSquares[gridSquares.Count - 1].transform.localScale = new Vector3(squaresScale, squaresScale, squaresScale);
 
-                gridSquares[gridSquares.Count -1].GetComponent<GridSquare>().SetImage(squareIndex % 2 == 0);
+                gridSquares[gridSquares.Count -1].GetComponent<GridSquare>().SetImage(lineIndicator.GetGridSquareIndex(squareIndex) % 2 == 0);
                 squareIndex++;
             }
         }

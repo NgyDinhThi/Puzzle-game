@@ -545,6 +545,7 @@ GameObject:
   m_Component:
   - component: {fileID: 513850544}
   - component: {fileID: 513850545}
+  - component: {fileID: 513850546}
   m_Layer: 5
   m_Name: Grid
   m_TagString: Untagged
@@ -592,6 +593,18 @@ MonoBehaviour:
   squaresScale: 0.9
   everySquareOffset: 0.5
   gridSquares: []
+--- !u!114 &513850546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513850543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50d3e2504553f514d8c27cd78d4e2ed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &810332811 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8574176856695129543, guid: 37d7f49a8c33bb948858a12f1558ef1f, type: 3}
