@@ -6,7 +6,7 @@ public class Shape : MonoBehaviour
 {
     public GameObject squareShapeImage;
 
-    //[HideInInspector]
+    [HideInInspector]
     public Shapedata currentShapeData;
 
     private List<GameObject> _currentShape = new List<GameObject>();
@@ -14,7 +14,7 @@ public class Shape : MonoBehaviour
 
     private void Start()
     {
-        RequestNewshape(currentShapeData);
+       
     }
 
     public void RequestNewshape(Shapedata shapeData)
@@ -57,112 +57,18 @@ public class Shape : MonoBehaviour
         }
     }
 
-    private float GetYposition4ShapeSquares(Shapedata shapeData, int row, Vector2 moveDistance)
-    {
-        float shiftOny = 0f;
-        if (shapeData.rows > 1)
-        {
-            if (shapeData.rows % 2 != 0)
-            {
-                var middleSquareIndex = (shapeData.rows - 1) / 2;
-                var multiplier = (shapeData.rows - 1) / 2;
-
-                if (row < middleSquareIndex)
-                {
-                    shiftOny = moveDistance.y * 1;
-                    shiftOny *= multiplier;
-                }
-                else if (row > middleSquareIndex)
-                {
-                    shiftOny = moveDistance.y * -1;
-                    shiftOny *= multiplier;
-                }
-            }
-            else
-            {
-                var middleSquareIndex2 = (shapeData.rows == 2) ? 1 : (shapeData.rows / 2);
-                var middleSquareIndex1 = (shapeData.rows == 2) ? 0 : (shapeData.rows - 2);
-                var multiplier = shapeData.rows / 2;
-
-                if (row == middleSquareIndex1 || row == middleSquareIndex2)
-                {
-                    if (row == middleSquareIndex2)
-                        shiftOny = (moveDistance.y / 2) * -1;
-                    if (row == middleSquareIndex1)
-                        shiftOny = (moveDistance.y / 2);
-                }
-                if (row < middleSquareIndex1 && row < middleSquareIndex2)
-                {
-                    shiftOny = moveDistance.y * 1;
-                    shiftOny *= multiplier;
-                }
-                else if(row > middleSquareIndex1 && row >middleSquareIndex2 )
-                {
-                    shiftOny = moveDistance.y * -1;
-                    shiftOny *= multiplier;
-                }
-
-            }
-        }
-        return shiftOny;
-
-    }
-
     private float GetXposition4ShapeSquares(Shapedata shapeData, int column, Vector2 moveDistance)
     {
-        float shiftOnx = 0f;
-        if (shapeData.columns > 1)
-        {
-            if (shapeData.columns % 2 != 0)
-            {
-                var middleSquareIndex = (shapeData.columns - 1) / 2;
-                var multiplier = (shapeData.columns - 1) / 2;
-                if (column < middleSquareIndex)
-                {
-                    shiftOnx = moveDistance.x * -1;
-                    shiftOnx *= multiplier;
-                }
-                else if (column > middleSquareIndex)
-                {
-                    shiftOnx = moveDistance.x * 1;
-                    shiftOnx *= multiplier;
-                }
-                   
-                
-            }
-            else
-            {
-                var middleSquaresIndex2 = (shapeData.columns == 2) ?1 : (shapeData.columns / 2);
-                var middleSquaresIndex1 = (shapeData.columns == 2) ?0 : (shapeData.columns - 1);
-                var multiplier = shapeData.columns / 2;
+        float width = shapeData.columns;
+        float offset = (width - 1) / 2f;
+        return (column - offset) * moveDistance.x;
+    }
 
-                if (column == middleSquaresIndex1 || column == middleSquaresIndex2)
-                {
-                    if (column == middleSquaresIndex2)
-                    {
-                        shiftOnx = moveDistance.x / 2;
-                    }
-                    if (column == middleSquaresIndex1)
-                    {
-                        shiftOnx = (moveDistance.x / 2) * -1;
-                    }
-                }
-
-                if (column < middleSquaresIndex1 && column < middleSquaresIndex2)
-                {
-                    shiftOnx = moveDistance.x * -1;
-                    shiftOnx *= multiplier;
-                }
-                else if(column > middleSquaresIndex1 && column > middleSquaresIndex2)
-                {
-                    shiftOnx = moveDistance.x * 1;
-                    shiftOnx *= multiplier;
-                }
-
-            }
-        }
-        return shiftOnx;
-
+    private float GetYposition4ShapeSquares(Shapedata shapeData, int row, Vector2 moveDistance)
+    {
+        float height = shapeData.rows;
+        float offset = (height - 1) / 2f;
+        return -(row - offset) * moveDistance.y;
     }
 
     private int GetNumberOfSquares(Shapedata shapedata)
