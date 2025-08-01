@@ -48,6 +48,10 @@ public class GridSquare : MonoBehaviour
             hooverImage.gameObject.SetActive(true);
 
         }
+        else if (collision.GetComponent<ShapeSquare>() != null)
+        {
+            collision.GetComponent<ShapeSquare>().SetOccupied();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -57,6 +61,10 @@ public class GridSquare : MonoBehaviour
             selected = false;
             hooverImage.gameObject.SetActive(false);
 
+        }
+        else if (collision.GetComponent<ShapeSquare>() != null)
+        {
+            collision.GetComponent<ShapeSquare>().UnSetOccupied();
         }
     }
 
@@ -68,6 +76,11 @@ public class GridSquare : MonoBehaviour
             hooverImage.gameObject.SetActive(true);
             
         }
+        else if (collision.GetComponent<ShapeSquare>() != null)
+        {
+            collision.GetComponent<ShapeSquare>().SetOccupied();
+        }
+       
     }
 
     public void SetImage(bool setFirstImage)
