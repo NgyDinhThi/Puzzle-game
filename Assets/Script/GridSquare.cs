@@ -38,6 +38,15 @@ public class GridSquare : MonoBehaviour
         selected = true;
         SquareOccupied = true;
     }    
+    public void Deactivate()
+    {
+        activeImage.gameObject.SetActive(false);
+    }    
+    public void ClearOccupied()
+    {
+        selected = false;
+        SquareOccupied = false ;
+    }    
 
     private void OnTriggerStay2D(Collider2D collision)
     {
