@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ShapeStorage : MonoBehaviour
@@ -15,4 +15,15 @@ public class ShapeStorage : MonoBehaviour
             shape.CreateShape(shapeData[shapeIndex]);   
         }
     }
+
+    public Shape GetCurrentSelectedShape()
+    {
+        foreach (var shape in shapeList)
+        {
+            if (shape.IsOnStartPosition() == false && shape.IsAnyOfShapeSquaresActive())
+                return shape;
+        }
+        Debug.LogError("không có hình được chọn");
+        return null;
+    }    
 }

@@ -5,5 +5,6 @@ public class GameEvents : MonoBehaviour
 {
     public static Action CheckIfShapeCanbePlaced;
 
-    
+    public static Action MoveShapeToStartPosition;
+       
 }

@@ -1,8 +1,10 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
+    public ShapeStorage shapeStorage;
     public int columns = 0;
     public int rows = 0;
     public float squaresGap = 0.1f;
@@ -35,6 +37,8 @@ public class Grid : MonoBehaviour
             for (var column = 0; column < columns; ++column)
             {
                 gridSquares.Add(Instantiate(_gridsquare) as GameObject);
+
+                gridSquares[gridSquares.Count -1].GetComponent<GridSquare>().SquareIndex = squareIndex;
                 gridSquares[gridSquares.Count -1].transform.SetParent(this.transform);
                 gridSquares[gridSquares.Count - 1].transform.localScale = new Vector3(squaresScale, squaresScale, squaresScale);
 
@@ -105,13 +109,32 @@ public class Grid : MonoBehaviour
 
     private void CheckIfShapeCanbePlaced()
     {
+        var squareIndex = new List<int>();
         foreach (var square in gridSquares)
         {
             var gridSquare = square.GetComponent<GridSquare>();
-            if (gridSquare.CanUseSquare() == true)
+            if (gridSquare.selected && !gridSquare.SquareOccupied)
             {
-                gridSquare.ActivateSquare();
+                squareIndex.Add(gridSquare.SquareIndex);
+                gridSquare.selected = false;
+                //gridSquare.ActivateSquare();
             }
+        }
+        var currentSelectedShape = shapeStorage.GetCurrentSelectedShape();
+        if (currentSelectedShape == null)
+         return;// không có hình được chọn
+
+        if (currentSelectedShape.totalSquareNumber == squareIndex.Count)
+        {
+            foreach (var squareIndexs in squareIndex)
+            {
+                gridSquares[squareIndexs].GetComponent<GridSquare>().PlaceShapeOnBoard();
+            }
+            currentSelectedShape.DeactivateShape();
+        }
+        else
+        {
+            GameEvents.MoveShapeToStartPosition();
         }
     }    
 
