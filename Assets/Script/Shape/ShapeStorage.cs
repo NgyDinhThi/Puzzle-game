@@ -25,5 +25,24 @@ public class ShapeStorage : MonoBehaviour
         }
         Debug.LogError("không có hình được chọn");
         return null;
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.RequestNewShape += RequestNewShape;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.RequestNewShape -= RequestNewShape;
+    }
+
+    private void RequestNewShape()
+    {
+        foreach (var shape in shapeList)
+        {
+            var shapeIndex = UnityEngine.Random.Range(0, shapeData.Count);
+            shape.RequestNewshape(shapeData[shapeIndex]);
+        }
     }    
 }
