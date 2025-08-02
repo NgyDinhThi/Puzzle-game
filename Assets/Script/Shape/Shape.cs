@@ -28,7 +28,9 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         canvas = GetComponentInParent<Canvas>();
         _startPosition = _transform.localPosition;
         _shapeActive = true;
+
     }
+
 
     private void OnEnable()
     {
@@ -204,27 +206,35 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
     }
     private void SetShapeInactive()
     {
-        if (isPlaced) return; // ✅ nếu đã được đặt rồi thì đừng đụng vào
+        if (isPlaced)
+        {
+            Debug.Log($"[Skip Hide] {gameObject.name} đã đặt rồi → bỏ qua.");
+            return;
+        }
 
         if (!IsOnStartPosition() && IsAnyOfShapeSquaresActive())
         {
-            bool shapePlaced = false;
             foreach (var square in _currentShape)
             {
-                if (square.GetComponent<ShapeSquare>().occupiedImage.gameObject.activeSelf)
-                {
-                    shapePlaced = true;
-                    break;
-                }
-            }
-
-            if (shapePlaced)
-            {
-                foreach (var square in _currentShape)
-                {
-                    square.SetActive(false);
-                }
+                square.SetActive(false);
             }
         }
+        else
+        {
+            Debug.Log($"[No Action] {gameObject.name} không bị ẩn. OnStartPos={IsOnStartPosition()}, AnySquareActive={IsAnyOfShapeSquaresActive()}");
+        }
+    }
+
+
+    public void ClearCurrentShape()
+    {
+        foreach (var square in _currentShape)
+        {
+            if (square != null)
+            {
+                Destroy(square); // hoặc square.SetActive(false); nếu muốn giữ lại để reuse
+            }
+        }
+        _currentShape.Clear();
     }
 }

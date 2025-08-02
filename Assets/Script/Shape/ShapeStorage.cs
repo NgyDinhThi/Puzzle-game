@@ -41,8 +41,20 @@ public class ShapeStorage : MonoBehaviour
     {
         foreach (var shape in shapeList)
         {
+            if (!shape.IsPlaced())
+            {
+                Debug.Log($"[Skip Clear] {shape.gameObject.name} chưa được đặt → không clear.");
+                continue;
+            }
+
+            shape.ClearCurrentShape(); // chỉ clear khi đã đặt
             var shapeIndex = UnityEngine.Random.Range(0, shapeData.Count);
             shape.RequestNewshape(shapeData[shapeIndex]);
+
         }
-    }    
+    }
+
+
+
+
 }

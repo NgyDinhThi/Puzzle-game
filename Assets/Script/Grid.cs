@@ -121,38 +121,41 @@ public class Grid : MonoBehaviour
             {
                 squareIndex.Add(gridSquare.SquareIndex);
                 gridSquare.selected = false;
-                //gridSquare.ActivateSquare();
             }
         }
+
         var currentSelectedShape = shapeStorage.GetCurrentSelectedShape();
-        if (currentSelectedShape == null)
-         return;// không có hình được chọn
+        if (currentSelectedShape == null) return;
 
         if (currentSelectedShape.totalSquareNumber == squareIndex.Count)
         {
-            foreach (var squareIndexs in squareIndex)
+            foreach (var index in squareIndex)
             {
-                gridSquares[squareIndexs].GetComponent<GridSquare>().PlaceShapeOnBoard();
+                gridSquares[index].GetComponent<GridSquare>().PlaceShapeOnBoard();
             }
 
-            currentSelectedShape.DeactivateAfterPlacement(); 
+            currentSelectedShape.DeactivateAfterPlacement();
 
-            var shapeLeft = 0;
+            // ✅ FIX: Đếm đúng số shape CHƯA được đặt
+            int unplacedShapes = 0;
             foreach (var shape in shapeStorage.shapeList)
             {
-                if (shape.IsOnStartPosition() && shape.IsAnyOfShapeSquaresActive())
-                {
-                    shapeLeft++;
-                }
+                if (!shape.IsPlaced()) unplacedShapes++;
             }
-
-            if (shapeLeft == 0)
+         
+            if (unplacedShapes == 0)
             {
-                GameEvents.RequestNewShape();
+                GameEvents.RequestNewShape(); 
             }
             else
             {
-                GameEvents.SetShapeInactive();
+                foreach (var shape in shapeStorage.shapeList)
+                {
+                    if (!shape.IsPlaced() && !shape.IsOnStartPosition() && shape.IsAnyOfShapeSquaresActive())
+                    {
+                        shape.DeactivateShape(); // ✅ Tắt những shape đang kéo dở dang
+                    }
+                }
             }
 
             CheckAnylineIsComplete();
@@ -161,8 +164,9 @@ public class Grid : MonoBehaviour
         {
             GameEvents.MoveShapeToStartPosition();
         }
-    }   
-    
+    }
+
+
     private void CheckAnylineIsComplete()
     {
         List<int[]> lines = new List<int[]>();
@@ -181,6 +185,16 @@ public class Grid : MonoBehaviour
             }
             lines.Add(data.ToArray());
         }
+        //square
+        for (var square = 0; square < 9; square++)
+        {
+            List<int> data = new List<int>(9);
+            for (var i = 0; i < 9; i++)
+            {
+                data.Add(lineIndicator.square_data[square, i]);   
+            }
+            lines.Add(data.ToArray());  
+        }
 
         var completedLines = CheckifSquareAreCompleted(lines);
         if (completedLines > 2)
@@ -188,6 +202,8 @@ public class Grid : MonoBehaviour
             //todo thêm hoạt ảnh
         }
         //todo thêm điểm
+        var totalScore = 10 * completedLines;
+        GameEvents.AddScores(totalScore);
     }    
 
     private int CheckifSquareAreCompleted(List<int[]> data)
