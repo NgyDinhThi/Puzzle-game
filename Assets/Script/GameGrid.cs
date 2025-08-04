@@ -146,7 +146,7 @@ public class GameGrid : MonoBehaviour
 
             currentSelectedShape.DeactivateAfterPlacement();
 
-            // ✅ FIX: Đếm đúng số shape CHƯA được đặt
+         
             int unplacedShapes = 0;
             foreach (var shape in shapeStorage.shapeList)
             {
@@ -163,7 +163,7 @@ public class GameGrid : MonoBehaviour
                 {
                     if (!shape.IsPlaced() && !shape.IsOnStartPosition() && shape.IsAnyOfShapeSquaresActive())
                     {
-                        shape.DeactivateShape(); // ✅ Tắt những shape đang kéo dở dang
+                        shape.DeactivateShape(); 
                     }
                 }
             }
@@ -207,9 +207,10 @@ public class GameGrid : MonoBehaviour
         }
 
         var completedLines = CheckifSquareAreCompleted(lines);
-        if (completedLines > 2)
+        if (completedLines >= 2)
         {
             //todo thêm hoạt ảnh
+            GameEvents.ShowWritingWord();
         }
         //todo thêm điểm
         var totalScore = 10 * completedLines;

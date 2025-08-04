@@ -19,4 +19,6 @@ public class GameEvents : MonoBehaviour
 
     public static Action<Config.squareColor> UpdateSquareColor;
 
+    public static Action ShowWritingWord;
+
 }
