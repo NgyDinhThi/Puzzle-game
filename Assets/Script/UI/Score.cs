@@ -30,8 +30,8 @@ public class Score : MonoBehaviour
     {
         bestScore_ = BinaryDataStream.Read<BestScoreData>(bestScoreKey_);
         yield return new WaitForEndOfFrame();
-        Debug.Log("Điểm tốt nhất = " + bestScore_.score);
-
+       
+        GameEvents.UpdateBestScoreBar(currentScores_, bestScore_.score);
     }   
     private void Start()
     {
@@ -61,8 +61,9 @@ public class Score : MonoBehaviour
         {
             newBestScore = true;
             bestScore_.score = currentScores_;
-            
+            SaveBestScore(true);
         }
+        GameEvents.UpdateBestScoreBar(currentScores_, bestScore_.score);
         UpdateScores(); 
     }   
     
