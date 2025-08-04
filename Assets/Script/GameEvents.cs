@@ -21,4 +21,6 @@ public class GameEvents : MonoBehaviour
 
     public static Action ShowWritingWord;
 
+    public static Action<Config.squareColor> ShowBonus;
+
 }

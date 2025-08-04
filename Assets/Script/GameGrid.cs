@@ -19,7 +19,7 @@ public class GameGrid : MonoBehaviour
 
     private LineIndicator lineIndicator;
     private Config.squareColor currentActiveSquareColor_ = Config.squareColor.NotSet;
-
+    private List<Config.squareColor> colorIntheGrid = new List<Config.squareColor>();
 
     private void Start()
     {
@@ -31,6 +31,28 @@ public class GameGrid : MonoBehaviour
     private void OnUpdateSquareColor(Config.squareColor color)
     {
         currentActiveSquareColor_ = color;
+    }    
+
+    private List<Config.squareColor> GetAllSquareColor()
+    {
+        var color = new List<Config.squareColor>();
+
+        foreach (var square in gridSquares)
+        {
+            var griDSquare = square.GetComponent<GridSquare>();
+            if (griDSquare.SquareOccupied)
+            {
+                var Squarecolor = griDSquare.GetCurrentColor();
+                if (color.Contains(Squarecolor) == false)
+                {
+                     color.Add(Squarecolor);
+                }
+
+
+            }
+        }
+
+        return color;
     }    
 
     private void CreateGrid()
@@ -205,6 +227,8 @@ public class GameGrid : MonoBehaviour
             }
             lines.Add(data.ToArray());  
         }
+        //cái này hoạt động song rồi mới xuống dưới
+        colorIntheGrid = GetAllSquareColor();
 
         var completedLines = CheckifSquareAreCompleted(lines);
         if (completedLines >= 2)
@@ -214,8 +238,34 @@ public class GameGrid : MonoBehaviour
         }
         //todo thêm điểm
         var totalScore = 10 * completedLines;
-        GameEvents.AddScores(totalScore);
+        var bonusScore = ShouldPlayColorBonus();
+        GameEvents.AddScores(totalScore + bonusScore);
         CheckLostCondition();
+    }    
+
+    private int ShouldPlayColorBonus()
+    {
+        var colorInTheGridRemove = GetAllSquareColor();
+        Config.squareColor colorToplayBonus = Config.squareColor.NotSet;
+        foreach (var squareColors in colorIntheGrid)
+        {
+            if (colorInTheGridRemove.Contains(squareColors) == false)
+            {
+                colorToplayBonus = squareColors;
+            }
+        }
+        if (colorToplayBonus == Config.squareColor.NotSet)
+        {
+            Debug.Log("Ko có màu nào ");
+            return 0;
+        }
+        //không thêm điểm bonus cho màu hiện tại
+        if (colorToplayBonus == currentActiveSquareColor_)
+        {
+            return 0;   
+        }
+        GameEvents.ShowBonus(colorToplayBonus);
+        return 50;
     }    
 
     private int CheckifSquareAreCompleted(List<int[]> data)
