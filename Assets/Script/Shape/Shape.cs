@@ -110,9 +110,17 @@ public class Shape : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IBe
         currentShapeData = shapeData;
         totalSquareNumber = GetNumberOfSquares(shapeData);
 
-        while (_currentShape.Count <= totalSquareNumber)
+        foreach (var square in _currentShape)
         {
-            _currentShape.Add(Instantiate(squareShapeImage, transform));
+            Destroy(square); // hoặc dùng pool nếu cần
+        }
+        _currentShape.Clear();
+
+        for (int i = 0; i < totalSquareNumber; i++)
+        {
+            var newSquare = Instantiate(squareShapeImage, transform);
+            newSquare.SetActive(false);
+            _currentShape.Add(newSquare);
         }
 
         foreach (var square in _currentShape)

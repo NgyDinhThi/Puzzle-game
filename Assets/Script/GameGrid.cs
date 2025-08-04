@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid : MonoBehaviour
+public class GameGrid : MonoBehaviour
 {
     public ShapeStorage shapeStorage;
     public int columns = 0;
@@ -204,6 +204,7 @@ public class Grid : MonoBehaviour
         //todo thêm điểm
         var totalScore = 10 * completedLines;
         GameEvents.AddScores(totalScore);
+        CheckLostCondition();
     }    
 
     private int CheckifSquareAreCompleted(List<int[]> data)
@@ -250,7 +251,113 @@ public class Grid : MonoBehaviour
             }
         }
         return linesCompleted;
-    }    
+    }
 
+    private void CheckLostCondition()
+    {
+        var validShapes = 0;
+
+        foreach (var shape in shapeStorage.shapeList)
+        {
+            // 💥 THÊM: Bỏ qua shape đã đặt rồi
+            if (shape.IsPlaced())
+                continue;
+
+            if (CheckCanbePlaceOnGrid(shape))
+            {
+                shape.ActivateShape();
+                validShapes++;
+            }
+        }
+
+        if (validShapes == 0)
+        {
+            //Debug.Log("Thua Cuộc");
+            GameEvents.GameOver(false);
+        }
+    }
+
+
+    private bool CheckCanbePlaceOnGrid(Shape currentShape)
+    {
+        var currentShapeData = currentShape.currentShapeData;
+        var ShapeColumns = currentShapeData.columns;
+        var ShapeRows = currentShapeData.rows;
+
+        //Lưu trữ các số ô đc điền
+        List<int> originalShapeFillSquare = new List<int>();
+        var squareIndex = 0;
+        for (var rowIndex = 0; rowIndex < ShapeRows; rowIndex++)
+        {
+            for (var columnIndex = 0; columnIndex < ShapeColumns; columnIndex++)
+            {
+                if (currentShapeData.board[rowIndex].column[columnIndex])
+                {
+                    originalShapeFillSquare.Add(squareIndex);
+                }
+                squareIndex++;  
+            }
+        }
+
+        if (currentShape.totalSquareNumber != originalShapeFillSquare.Count)
+            Debug.LogError("Số ô được dùng không như số ô ban đầu");
+        
+        var sqaureList = GetAllCombination(ShapeColumns, ShapeRows);
+        bool canbePlaced = false;
+        foreach (var number in sqaureList)
+        {
+            bool ShapeCanbePlacedOnTheBoard = true;
+            foreach (var sqaureIndexToCheck in originalShapeFillSquare)
+            {
+                var comp = gridSquares[number[sqaureIndexToCheck]].GetComponent<GridSquare>();
+                if (comp.SquareOccupied)
+                {
+                    ShapeCanbePlacedOnTheBoard = false;
+                }
+            }
+
+            if (ShapeCanbePlacedOnTheBoard)
+            {
+                canbePlaced = true;
+            }
+        }
+        return canbePlaced;
+    }
+
+    private List<int[]> GetAllCombination(int columns, int rows)
+    {
+
+        var squareList = new List<int[]>();
+        var lastColumnIndex = 0;
+        var lastRowIndex = 0;
+        int safeIndex = 0;
+
+        while (lastRowIndex +(rows -1 )< 9 )
+        {
+            var rowData = new List<int>();
+            for (var row = lastRowIndex; row < lastRowIndex + rows; row++)
+            {
+                for (var column = lastColumnIndex; column < lastColumnIndex + columns; column++)
+                {
+                    rowData.Add(lineIndicator.line_data[row, column]);   
+                }
+            }
+
+            squareList.Add(rowData.ToArray());
+            lastColumnIndex++;
+
+            if (lastColumnIndex + (columns - 1) >= 9)
+            {
+                lastRowIndex++;
+                lastColumnIndex = 0;    
+            }
+            safeIndex++;
+            if (safeIndex > 100)
+            {
+                break;
+            }
+        }
+        return squareList;
+    }    
 }
  
