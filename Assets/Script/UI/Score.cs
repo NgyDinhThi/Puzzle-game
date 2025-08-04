@@ -12,6 +12,7 @@ public class BestScoreData
 
 public class Score : MonoBehaviour
 {
+    public SquareTextureData squareTextureData;
     public TMP_Text scoreText;
     private bool newBestScore =false;
     private BestScoreData bestScore_ = new BestScoreData();
@@ -38,6 +39,7 @@ public class Score : MonoBehaviour
         currentScores_ = 0;
         newBestScore = false;
         UpdateScores();
+        squareTextureData.SetStartColors();
     }
 
     private void OnEnable()
@@ -63,9 +65,22 @@ public class Score : MonoBehaviour
             bestScore_.score = currentScores_;
             SaveBestScore(true);
         }
+
+        UpdateSquareColor();
         GameEvents.UpdateBestScoreBar(currentScores_, bestScore_.score);
         UpdateScores(); 
-    }   
+    }  
+    
+    private void UpdateSquareColor()
+    {
+        if (GameEvents.UpdateSquareColor != null &&  currentScores_ >= squareTextureData.tresholdVal)
+        {
+            squareTextureData.UpdateColors(currentScores_);
+            GameEvents.UpdateSquareColor(squareTextureData.currentColors);
+        }
+
+
+    }    
     
     private void UpdateScores()
     { 

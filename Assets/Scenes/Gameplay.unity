@@ -648,7 +648,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -327.38, y: -70.4}
+  m_AnchoredPosition: {x: -327.38, y: -70.400024}
   m_SizeDelta: {x: 378.18, y: 145}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &386806061
@@ -663,6 +663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 191b3bb5d7c4a564eb960b82ca7bdb02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  squareTextureData: {fileID: 11400000, guid: 8287bb14c4975a0488543e0d55875b80, type: 2}
   scoreText: {fileID: 1851019497}
 --- !u!1 &457917707
 GameObject:
@@ -943,6 +944,7 @@ MonoBehaviour:
   startPosition: {x: -435, y: 442}
   squaresScale: 0.9
   everySquareOffset: 0.5
+  squareTextureData: {fileID: 11400000, guid: 8287bb14c4975a0488543e0d55875b80, type: 2}
   gridSquares: []
 --- !u!114 &513850546
 MonoBehaviour:
@@ -1259,6 +1261,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 882722407}
+  - component: {fileID: 882722408}
   m_Layer: 5
   m_Name: BestScoreBar
   m_TagString: Untagged
@@ -1289,6 +1292,20 @@ RectTransform:
   m_AnchoredPosition: {x: 398.59, y: 704.54}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &882722408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882722406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f039fe5c128b19940a176df523533b29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fillImage: {fileID: 722676443}
+  bestScoreText: {fileID: 1212616686}
 --- !u!1 &995372717
 GameObject:
   m_ObjectHideFlags: 0
