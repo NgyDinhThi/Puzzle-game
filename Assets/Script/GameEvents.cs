@@ -23,4 +23,6 @@ public class GameEvents : MonoBehaviour
 
     public static Action<Config.squareColor> ShowBonus;
 
+    public static Action CheckifPlayerLost;
+
 }

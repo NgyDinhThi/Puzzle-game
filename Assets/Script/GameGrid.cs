@@ -135,12 +135,14 @@ public class GameGrid : MonoBehaviour
     {
         GameEvents.CheckIfShapeCanbePlaced += CheckIfShapeCanbePlaced;
         GameEvents.UpdateSquareColor += OnUpdateSquareColor;
+        GameEvents.CheckifPlayerLost += CheckLostCondition;
     }
 
     private void OnDisable()
     {
         GameEvents.CheckIfShapeCanbePlaced -= CheckIfShapeCanbePlaced;
         GameEvents.UpdateSquareColor -= OnUpdateSquareColor;
+        GameEvents.CheckifPlayerLost -= CheckLostCondition;
     }
 
     private void CheckIfShapeCanbePlaced()
@@ -240,7 +242,8 @@ public class GameGrid : MonoBehaviour
         var totalScore = 10 * completedLines;
         var bonusScore = ShouldPlayColorBonus();
         GameEvents.AddScores(totalScore + bonusScore);
-        CheckLostCondition();
+        GameEvents.CheckifPlayerLost();
+        
     }    
 
     private int ShouldPlayColorBonus()
