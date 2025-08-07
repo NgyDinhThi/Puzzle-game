@@ -90,5 +90,15 @@ public class Score : MonoBehaviour
     public void SaveBestScore(bool newBestScore)
     {
         BinaryDataStream.Save<BestScoreData>(bestScore_, bestScoreKey_);
-    }    
+    }
+
+    public int GetCurrentScore()
+    {
+        return currentScores_;
+    }
+
+    public int GetBestScore()
+    {
+        return bestScore_.score;
+    }
 }

@@ -336,7 +336,7 @@ public class GameGrid : MonoBehaviour
 
         if (validShapes == 0)
         {
-            //Debug.Log("Thua Cuộc");
+            Debug.Log("Thua Cuộc");
             GameEvents.GameOver(false);
         }
     }

@@ -23,6 +23,20 @@ public class RequestNewShapeButton : MonoBehaviour
         _button.onClick.AddListener(OnButtonDown);
         Unlock();
     }
+    private void OnEnable()
+    {
+        GameEvents.GameOver += OnGameOver;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.GameOver -= OnGameOver;
+    }
+
+    private void OnGameOver(bool newBestScore)
+    {
+        Lock(); // Khoá nút khi GameOver
+    }
 
     private void OnButtonDown()
     {
