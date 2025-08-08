@@ -15,6 +15,14 @@ public class RequestNewShapeButton : MonoBehaviour
     private Button _button;
     private bool _isLocked;
 
+    public int GetRemaining() => _currentNumberRequest;
+    public void SetRemaining(int value)
+    {
+        _currentNumberRequest = Mathf.Max(0, value);
+        numberText.text = _currentNumberRequest.ToString();
+        if (_currentNumberRequest <= 0) Lock(); else Unlock();
+    }
+
     private void Start()
     {
         _currentNumberRequest = numberRequest;

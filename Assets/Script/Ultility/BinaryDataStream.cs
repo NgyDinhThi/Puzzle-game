@@ -8,6 +8,8 @@ using System.Runtime.Serialization;
 
 public class BinaryDataStream 
 {
+    private static string Dir => Application.persistentDataPath + "/save/";
+
     public static void Save<T>(T serializedObject, string fileName)
     {
         string path = Application.persistentDataPath + "/save/";
@@ -62,4 +64,11 @@ public class BinaryDataStream
 
         return returnType;
     }
+
+    public static void Delete(string fileName)
+    {
+        var path = Path.Combine(Dir, fileName + ".data");
+        if (File.Exists(path)) File.Delete(path);
+    }
+
 }

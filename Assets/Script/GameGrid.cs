@@ -25,7 +25,23 @@ public class GameGrid : MonoBehaviour
     {
         lineIndicator = GetComponent<LineIndicator>();
         CreateGrid();
+
+        if (GamePersistence.Instance != null)
+        {
+            GamePersistence.Instance.grid = this;
+            GamePersistence.Instance.shapeStorage = this.shapeStorage;
+            GamePersistence.Instance.requestBtn = UnityEngine.Object.FindFirstObjectByType<RequestNewShapeButton>(FindObjectsInactive.Include);
+            GamePersistence.Instance.scoreManager = UnityEngine.Object.FindFirstObjectByType<Score>(FindObjectsInactive.Include);
+            StartCoroutine(LoadGridNextFrame());
+        }
+
         currentActiveSquareColor_ = squareTextureData.activeSquareTexture[0].color;
+    }
+
+    private System.Collections.IEnumerator LoadGridNextFrame()
+    {
+        yield return null; // đợi 1 frame
+        GamePersistence.Instance?.LoadNow();
     }
 
     private void OnUpdateSquareColor(Config.squareColor color)

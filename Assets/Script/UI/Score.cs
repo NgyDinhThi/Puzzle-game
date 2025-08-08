@@ -19,6 +19,9 @@ public class Score : MonoBehaviour
 
     private int currentScores_;
     private string bestScoreKey_ = "bskdata";
+
+   
+
     private void Awake()
     {
         if (BinaryDataStream.Exist(bestScoreKey_))
@@ -40,6 +43,7 @@ public class Score : MonoBehaviour
         newBestScore = false;
         UpdateScores();
         squareTextureData.SetStartColors();
+        GameEvents.UpdateSquareColor?.Invoke(squareTextureData.currentColors);
     }
 
     private void OnEnable()
@@ -59,6 +63,14 @@ public class Score : MonoBehaviour
     private void AddScores(int scores)
     {
         currentScores_ += scores;
+
+        // đổi while để bắt kịp nhiều mốc 100, 200, 300...
+        while (currentScores_ >= squareTextureData.tresholdVal)
+        {
+            squareTextureData.UpdateColors(currentScores_);
+            GameEvents.UpdateSquareColor?.Invoke(squareTextureData.currentColors);
+        }
+
         if (currentScores_ > bestScore_.score)
         {
             newBestScore = true;
@@ -66,11 +78,11 @@ public class Score : MonoBehaviour
             SaveBestScore(true);
         }
 
-        UpdateSquareColor();
         GameEvents.UpdateBestScoreBar(currentScores_, bestScore_.score);
-        UpdateScores(); 
-    }  
-    
+        UpdateScores();
+    }
+
+
     private void UpdateSquareColor()
     {
         if (GameEvents.UpdateSquareColor != null &&  currentScores_ >= squareTextureData.tresholdVal)
@@ -79,7 +91,7 @@ public class Score : MonoBehaviour
             GameEvents.UpdateSquareColor(squareTextureData.currentColors);
         }
 
-
+        GameEvents.UpdateSquareColor?.Invoke(squareTextureData.currentColors);
     }    
     
     private void UpdateScores()
@@ -101,4 +113,16 @@ public class Score : MonoBehaviour
     {
         return bestScore_.score;
     }
+
+    public void RestoreCurrentScore(int value)
+    {
+        currentScores_ = Mathf.Max(0, value);
+
+        squareTextureData.RecalculateByScore(currentScores_);
+        GameEvents.UpdateSquareColor?.Invoke(squareTextureData.currentColors);
+
+        UpdateScores();
+        GameEvents.UpdateBestScoreBar?.Invoke(currentScores_, bestScore_.score);
+    }
+
 }

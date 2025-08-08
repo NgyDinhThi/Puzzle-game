@@ -1,25 +1,15 @@
-using NUnit.Framework;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-
 
 [CreateAssetMenu]
 [System.Serializable]
-
-
 public class SquareTextureData : ScriptableObject
 {
     [System.Serializable]
-    public class TextureData
-    {
-        public Sprite texture;
-        public Config.squareColor color;
+    public class TextureData { public Sprite texture; public Config.squareColor color; }
 
-    }
-
-    public int tresholdVal = 10;
-    private const int startTresholdVal = 100;
+    [SerializeField] private int startThreshold = 100; // <- cho phép truy cập
+    public int tresholdVal = 10;                       // giữ như cũ
     public List<TextureData> activeSquareTexture;
 
     public Config.squareColor currentColors;
@@ -27,49 +17,44 @@ public class SquareTextureData : ScriptableObject
 
     private int GetCurrentColorIndex()
     {
-        var currentIndex = 0;
-        for (int index = 0; index < activeSquareTexture.Count; index++)
-        {
-            if (activeSquareTexture[index].color == currentColors)
-            {
-                currentIndex = index;
-            }
-        }
-        return currentIndex;
+        for (int i = 0; i < activeSquareTexture.Count; i++)
+            if (activeSquareTexture[i].color == currentColors) return i;
+        return 0;
+    }
 
-    }    
-
-    public void UpdateColors(int current_score)
+    // advance đúng 1 bước màu
+    private void AdvanceColorOnce()
     {
         currentColors = _nextColor;
-        var currentColorsIndex = GetCurrentColorIndex();
-        if (currentColorsIndex == activeSquareTexture.Count - 1)
-            _nextColor = activeSquareTexture[0].color;
-        else
-        {
-            _nextColor = activeSquareTexture[currentColorsIndex + 1].color;
-        }
+        int idx = GetCurrentColorIndex();
+        _nextColor = (idx == activeSquareTexture.Count - 1)
+            ? activeSquareTexture[0].color
+            : activeSquareTexture[idx + 1].color;
+    }
 
-        tresholdVal = startTresholdVal + current_score;
-    }    
+    // Được gọi khi VƯỢT NGƯỠNG trong lúc chơi
+    public void UpdateColors(int _ignoredCurrentScore)
+    {
+        AdvanceColorOnce();
+        tresholdVal += startThreshold; // mỗi lần vượt ngưỡng, tăng thêm 100
+    }
+
+    // Dùng khi RESTORE: tính màu từ điểm hiện tại
+    public void RecalculateByScore(int score)
+    {
+        SetStartColors();                       // quay về màu đầu
+        int steps = Mathf.Max(0, score / startThreshold);  // số lần đã vượt ngưỡng
+        for (int i = 0; i < steps; i++) AdvanceColorOnce();
+        tresholdVal = startThreshold * (steps + 1);        // ngưỡng tiếp theo
+    }
 
     public void SetStartColors()
     {
-        tresholdVal = startTresholdVal;
+        tresholdVal = startThreshold;
         currentColors = activeSquareTexture[0].color;
         _nextColor = activeSquareTexture[1].color;
-
-
     }
 
-    private void Awake()
-    {
-        SetStartColors();
-
-    }
-
-    private void OnEnable()
-    {
-        SetStartColors();
-    }
+    private void Awake() { SetStartColors(); }
+    private void OnEnable() { SetStartColors(); }
 }
