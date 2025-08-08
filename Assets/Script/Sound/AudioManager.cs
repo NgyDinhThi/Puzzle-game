@@ -8,6 +8,7 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
     public Sound[] sounds;
 
+    public const string VolumeKey = "UserVolume";
 
     private void Awake()
     {
@@ -30,16 +31,31 @@ public class AudioManager : MonoBehaviour
             s.source.volume = s.volume;
         }
 
-      
+        float saved = PlayerPrefs.GetFloat(VolumeKey, 0.5f);
+        SetAllVolumes(saved, save: false);
+
     }
 
-    private void Update()
+    public void SetAllVolumes(float value, bool save = true)
     {
-        foreach (Sound s in sounds)
+        value = Mathf.Clamp01(value);
+        foreach (var s in sounds)
         {
+            s.volume = value;          // giá trị data
             if (s.source != null)
-                s.source.volume = s.volume;
+                s.source.volume = value; // áp dụng vào AudioSource đang chạy
         }
+
+        if (save)
+        {
+            PlayerPrefs.SetFloat(VolumeKey, value);
+            PlayerPrefs.Save();
+        }
+    }
+
+    public float GetCurrentVolume()
+    {
+        return PlayerPrefs.GetFloat(VolumeKey, 0.5f);
     }
 
     private void Start()

@@ -35,7 +35,7 @@ public class RequestNewShapeButton : MonoBehaviour
 
     private void OnGameOver(bool newBestScore)
     {
-        Lock(); // Khoá nút khi GameOver
+        Lock(); 
     }
 
     private void OnButtonDown()

@@ -5,27 +5,36 @@ public class AudioSettingsUI : MonoBehaviour
 {
     public Slider volumeSlider;
 
-    private void Start()
+    private void Awake()
     {
-        // Nếu muốn mặc định 0.5
-        volumeSlider.value = 0.5f;
-
-        // Gán giá trị volume ban đầu cho tất cả sound
-        foreach (Sound s in AudioManager.instance.sounds)
-        {
-            s.volume = volumeSlider.value;
-        }
-
-        // Gán sự kiện khi kéo slider
-        volumeSlider.onValueChanged.AddListener(HandleVolumeChanged);
+        if (!volumeSlider) volumeSlider = GetComponent<Slider>();
+        volumeSlider.minValue = 0f;
+        volumeSlider.maxValue = 1f;
+        volumeSlider.wholeNumbers = false;
     }
 
-    private void HandleVolumeChanged(float value)
+    private void Start()
     {
-        // Cập nhật volume cho tất cả sound
-        foreach (Sound s in AudioManager.instance.sounds)
-        {
-            s.volume = value;
-        }
+        float saved = PlayerPrefs.GetFloat(AudioManager.VolumeKey, 0.5f);
+
+        // set slider mà không bắn event
+        volumeSlider.SetValueWithoutNotify(saved);
+
+        // áp dụng volume đã lưu (không cần save lại)
+        AudioManager.instance.SetAllVolumes(saved, save: false);
+
+        // lắng nghe kéo slider
+        volumeSlider.onValueChanged.AddListener(OnSliderChanged);
+    }
+
+    private void OnDestroy()
+    {
+        volumeSlider.onValueChanged.RemoveListener(OnSliderChanged);
+    }
+
+    private void OnSliderChanged(float value)
+    {
+        // cập nhật toàn hệ thống + lưu PlayerPrefs
+        AudioManager.instance.SetAllVolumes(value, save: true);
     }
 }

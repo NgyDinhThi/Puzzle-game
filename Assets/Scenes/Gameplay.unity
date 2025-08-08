@@ -756,7 +756,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &360282783
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2007,8 +2007,8 @@ MonoBehaviour:
   gameoverPopup: {fileID: 360282782}
   losePopup: {fileID: 1085047212}
   newBestScorePopup: {fileID: 1261413407}
-  currentScoreText: {fileID: 0}
-  bestScoreText: {fileID: 0}
+  currentScoreText: {fileID: 369621536}
+  bestScoreText: {fileID: 1184672946}
   scoreManager: {fileID: 386806061}
 --- !u!1 &722676441
 GameObject:
